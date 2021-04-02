@@ -1,8 +1,11 @@
 const jwt = require("jsonwebtoken");
-const authConfig = require("../config/auth");
+const authConfig = require("../../config/auth");
+
+const Role = require('../models/role');
+const User = require('../models/user');
 
 module.exports = {
-  verifyToken = (req, res, next) => {
+  verifyToken (req, res, next) {
     let token = req.headers["x-access-token"];
   
     if (!token) {
@@ -18,7 +21,7 @@ module.exports = {
     });
   },
   
-  isAdmin = (req, res, next) => {
+  isRegular (req, res, next) {
     User.findById(req.userId).exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -36,44 +39,13 @@ module.exports = {
           }
   
           for (let i = 0; i < roles.length; i++) {
-            if (roles[i].name === "admin") {
+            if (roles[i].name === "regular") {
               next();
               return;
             }
           }
   
-          res.status(403).send({ message: "Require Admin Role!" });
-          return;
-        }
-      );
-    });
-  },
-  
-  isModerator = (req, res, next) => {
-    User.findById(req.userId).exec((err, user) => {
-      if (err) {
-        res.status(500).send({ message: err });
-        return;
-      }
-  
-      Role.find(
-        {
-          _id: { $in: user.roles }
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-  
-          for (let i = 0; i < roles.length; i++) {
-            if (roles[i].name === "moderator") {
-              next();
-              return;
-            }
-          }
-  
-          res.status(403).send({ message: "Require Moderator Role!" });
+          res.status(403).send({ message: "Require regular role!" });
           return;
         }
       );

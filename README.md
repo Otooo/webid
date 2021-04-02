@@ -53,7 +53,7 @@ Follow the next steps ([using the makefile](#using-makefile) or [docker-compose]
   * Run seed of mongodb.  
     `make seed`  
     or  
-    `docker-compose -f ./backend/docker-compose.yml exec api_webid node ...`  
+    `docker-compose -f ./backend/docker-compose.yml exec api_webid npm run seed`  
 
 
 [MAKEFILE]: ./Makefile

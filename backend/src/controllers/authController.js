@@ -1,23 +1,22 @@
 var jwt = require("jsonwebtoken");
 const authConfig = require("../../config/auth");
 // var bcrypt = require("bcrypt");
-const User = require('../models/user');
+
 require('../models/role');
+const User = require('../models/user');
 
 module.exports = {
   /**
    * 
    * @param {*} req 
    * @param {*} res 
-   * @param {*} next 
    */
-  login(req, res, next) {
+  login(req, res) {
     User.findOne({
       name: req.body.name
     })
     .populate("roles", "-__v")
     .exec((error, user) => {
-      console.log('USER', user)
       if (error) {
         res.status(500).send({ error });
         return;
@@ -49,11 +48,11 @@ module.exports = {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
 
+      res.set('accessToken', token);
       res.status(200).send({
         id: user._id,
         name: user.name,
         roles: authorities,
-        accessToken: token
       });
     });
   }
