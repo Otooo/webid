@@ -1,23 +1,8 @@
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { uridb, options } = require('./connectDB');
 
-const {
-  DB_HOST,
-  DB_PORT,
-  DB_DATABASE,
-  DB_USERNAME,
-  DB_PASSWORD
-} = process.env;
-
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-};
-
-// ${DB_USERNAME}:${DB_PASSWORD}@
-const url = `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
-// ?authSource=admin
-
-mongoose.connect(url, options)
+mongoose.connect(uridb, options)
 .then(result => {
   console.log('MongoDB connected!');
 })
