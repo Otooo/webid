@@ -1,0 +1,54 @@
+version: '3.7'
+
+#Extensões
+x-env: &env
+  - ./.env
+
+volumes:
+  data:
+    #driver: local
+networks:
+  api_webid_network:
+    external: false #(true) If already exists the network
+    name: api_webid_network
+  db_webid_network:
+    driver: bridge
+
+services:
+  api_webid:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: api_webid
+    restart: unless-stopped
+    volumes:
+      # Project
+      - ./:/webid-api
+      # - /webid-api/node_modules
+    # working_dir: /webid-api
+    env_file: *env
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 9000:${PORT}
+    networks:
+     - api_webid_network
+     - db_webid_network
+    depends_on:
+      - db_webid
+  db_webid:
+    image: mongo
+    container_name: db_webid
+    restart: always
+    volumes:
+      # save local db
+      - data:/data/db
+    env_file: *env
+    environment:
+      MONGO_INITDB_DATABASE: ${DB_DATABASE}
+      # MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      # MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 27017:${DB_PORT}
+    networks:
+      - db_webid_network
