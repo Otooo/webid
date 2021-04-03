@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Item = require('../models/item');
 const Auction = require('../models/auction');
+const BotSubscribe = require('../models/botSubscribe');
 
 module.exports = {
 
@@ -9,9 +10,17 @@ module.exports = {
    * @param {*} req 
    * @param {*} res 
    */
-  index(req, res) {
-    const filter = { ...req.body.filter, user: req.userId };
-    Auction.find({}, "-__v")
+  async index(req, res) {
+    const user = await User.findOne({ _id: req.userId })
+    .populate("roles", "name")
+    
+    let filter = { ...req.body.filter };
+    // , user: req.userId
+    if (user.roles.find(role => 'regular' === role.name)) {
+      filter = { ...filter, status: "opened" };
+    }
+    
+    Auction.find(filter, "-__v")
     .then(result => {
       res.json({
         data: result
@@ -46,6 +55,7 @@ module.exports = {
     } = req.body;
     const auction = await Auction.findOne({ _id: id });
 
+    let message = "Auction updated successfully!";
     if (current_bid) {
       if (auction.current_bid >= current_bid) {
         res.status(500).send({ error: "Your bid is lower then allowed amount!" });
@@ -58,14 +68,26 @@ module.exports = {
       auction.payer = req.userId;
       auction.current_bid = current_bid;
     } else {
-      if (status)
+      if (status) {
         auction.status = status;
+        if ('closed' === status) { // remove all subscribe related to auction
+          try {
+            await BotSubscribe.deleteMany({
+              auction: auction._id
+            })
+            message += "Subscriptions removed!";
+          } catch(error) {
+            message += error;
+          }
+        }
+      }
     }
 
     auction.save()
     .then(result => {
       res.json({
-        data: result
+        data: result,
+        message
       });
     })
     .catch(error => {
