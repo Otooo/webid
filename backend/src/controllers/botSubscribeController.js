@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Bidbot = require('../models/bidbot');
 const Auction = require('../models/auction');
 const BotSubscribe = require('../models/botSubscribe');
+const BotSubscribeService = require('../services/botSubscribeService');
+const BidbotService = require('../services/bidbotService');
 
 module.exports = {
 
@@ -38,11 +40,18 @@ module.exports = {
 
     let botSubscribe = await BotSubscribe.findOne({ auction, bidbot: bot._id }, "-__v")
 
-    if (!botSubscribe)
+    if (!botSubscribe) {
       botSubscribe = new BotSubscribe({
         bidbot: bot._id,
         auction
       });
+    }
+
+    try { // active the bidbot
+      await BidbotService.update(bot, { active: true });
+    } catch (error) {
+      // ...
+    }
 
     botSubscribe.save()
     .then(result => {
@@ -65,9 +74,13 @@ module.exports = {
     const user = req.userId;
     const bot = await Bidbot.findOne({ user }, "-__v")
 
-    BotSubscribe.deleteOne({
-      bidbot: bot._id,
-      auction
+    // BotSubscribe.deleteOne({
+    //   bidbot: bot._id,
+    //   auction
+    // })
+    BotSubscribeService.delete({
+      auctionId: auction,
+      bidBotId: bot._id
     })
     .then(result => {
       res.json({

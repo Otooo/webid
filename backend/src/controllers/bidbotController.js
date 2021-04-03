@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const Bidbot = require('../models/bidbot');
+const BidbotService = require('../services/bidbotService');
+const BotSubscribeService = require('../services/botSubscribeService');
 
 module.exports = {
 
@@ -32,20 +34,31 @@ module.exports = {
     const user = req.userId;
     const bot = await Bidbot.findOne({ user }, "-__v")
     
-    const {
-      active,
-      max_bid,
-      current_bid
-    } = req.body;
+    // const {
+    //   active,
+    //   max_bid,
+    //   current_bid
+    // } = req.body;
 
-    bot.active = (true === active || false === active)? active : bot.active;
-    bot.max_bid = (max_bid || 0 === max_bid)? max_bid : bot.max_bid;
-    bot.current_bid = (current_bid || 0 === current_bid)? current_bid : bot.current_bid;
+    // bot.active = (true === active || false === active)? active : bot.active;
+    // bot.max_bid = (max_bid || 0 === max_bid)? max_bid : bot.max_bid;
+    // bot.current_bid = (current_bid || 0 === current_bid)? current_bid : bot.current_bid;
 
-    bot.save()
-    .then(result => {
+    // bot.save()
+    BidbotService.update(bot, req.body)
+    .then(async (result) => {
+      let message = "Bot successfully updated!";
+      if (!bot.active) { // removing all subscirbes realted to bot
+        try {
+          await BotSubscribeService.delete({ bidBotId: bot._id });
+          message += " All subscribe removed!";
+        } catch (error) {
+          message += " "+ error;
+        }
+      }
+
       res.json({
-        message: "Bot successfully updated!"
+        message
       });
     })
     .catch(error => {

@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Item = require('../models/item');
 const Auction = require('../models/auction');
 const BotSubscribe = require('../models/botSubscribe');
+const BotSubscribeService = require('../services/botSubscribeService');
 
 module.exports = {
 
@@ -72,10 +73,8 @@ module.exports = {
         auction.status = status;
         if ('closed' === status) { // remove all subscribe related to auction
           try {
-            await BotSubscribe.deleteMany({
-              auction: auction._id
-            })
-            message += "Subscriptions removed!";
+            await BotSubscribeService.delete({ auctionId: auction._id });
+            message += " Subscriptions removed!";
           } catch(error) {
             message += error;
           }
