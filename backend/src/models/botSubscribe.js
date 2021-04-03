@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const subscribeSchema = new Schema({
+const botSubscribeSchema = new Schema({
   bidbot: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Bidbot"
@@ -12,4 +12,4 @@ const subscribeSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Subscribe', subscribeSchema, 'subscribes');
+module.exports = mongoose.model('BotSubscribe', botSubscribeSchema, 'bot_subscribes');
