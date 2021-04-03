@@ -15,6 +15,8 @@ module.exports = {
     const user = await User.findOne({ _id: req.userId })
     .populate("roles", "name")
     
+    // Fix retrieve, when admin, only own auctions
+    // Fix filters to retrieve item name and description and sort by price
     let filter = { ...req.body.filter };
     // , user: req.userId
     if (user.roles.find(role => 'regular' === role.name)) {
@@ -22,6 +24,7 @@ module.exports = {
     }
     
     Auction.find(filter, "-__v")
+    .sort('current_bid')
     .then(result => {
       res.json({
         data: result
