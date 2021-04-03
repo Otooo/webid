@@ -4,6 +4,13 @@ const { uridb, options } = require('./connectDB');
 // const bcrypt = require('bcrypt');
 // const saltRounds = process.env.HASH_SALT;
 
+const Role   = require('../src/models/role');
+const User   = require('../src/models/user');
+const Bidbot = require('../src/models/bidbot');
+
+const ROLES = ["admin", "regular"];
+
+// Running
 mongoose.connect(uridb, options)
 .then(async () => {
   console.log('Dropping database ...');
@@ -15,7 +22,8 @@ mongoose.connect(uridb, options)
   // call seeders
   await seedRoles();
   await seedUsers();
-  await seedLinkUsersRoles()
+  await linkUsersRoles()
+  await seedBidbots();
 
   console.log('Seeders finished!');
   process.exit('success');
@@ -24,12 +32,7 @@ mongoose.connect(uridb, options)
   console.log(error);
 });
 
-const Role = require('../src/models/role');
-const User = require('../src/models/user');
-
-const ROLES = ["admin", "regular"];
-
-// Seeders
+// seeders
 function seedRoles() {
   console.log('Seeding roles ...');
   let promises = []
@@ -55,7 +58,7 @@ function seedUsers() {
   console.log('Seeding users ...');
   let promises = []
 
-  // Admin
+  // admin
   promises.push(new User({
       name: 'admin',
       password: 'admin'//bcrypt.hashSync('admin', saltRounds)
@@ -69,7 +72,7 @@ function seedUsers() {
     })
   );
 
-  // User 1
+  // user1
   promises.push(new User({
       name: 'user1',
       password: 'user1'//bcrypt.hashSync('user1', saltRounds)
@@ -83,7 +86,7 @@ function seedUsers() {
     })
   );
   
-  // User 2
+  // user2
   promises.push(new User({
       name: 'user2',
       password: 'user2'//bcrypt.hashSync('user2', saltRounds)
@@ -100,8 +103,8 @@ function seedUsers() {
   return Promise.all(promises);
 }
 
-async function seedLinkUsersRoles() {
-  console.log('Seeding link users-roles ...');
+async function linkUsersRoles() {
+  console.log('Linking users-roles ...');
   let promises = []
 
   const adminRole = await Role.findOne({ name: ROLES[0] });
@@ -121,3 +124,28 @@ async function seedLinkUsersRoles() {
   return Promise.all(promises);
 }
 
+async function seedBidbots() {
+  console.log('Seeding bidbots ...');
+  let promises = []
+
+  const admin = await User.findOne({ name: 'admin' });
+  const user1 = await User.findOne({ name: 'user1' });
+  const user2 = await User.findOne({ name: 'user2' });
+  const users = [admin, user1, user2];
+
+  users.forEach(user => {
+    promises.push(new Bidbot({
+        user: user._id
+      })
+      .save()
+      .then(() => {
+        console.log(`  > added '${user.name} bot' to bidbots collection`);
+      })
+      .catch(error => {
+        console.log("error", error);
+      })
+    )
+  });
+
+  return Promise.all(promises);
+}

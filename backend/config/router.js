@@ -2,10 +2,10 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const authJwt = require("../src/middlewares/authMiddleware");
 
-const cors = require("cors");
+// const cors = require("cors");
 const router = express.Router();
 
 module.exports = function (server) {
@@ -18,7 +18,7 @@ module.exports = function (server) {
   // configure parsers
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
-  // server.use(cookieParser());
+  server.use(cookieParser());
 
   // test api
   router.get('/', (req, res) => {
@@ -36,7 +36,6 @@ module.exports = function (server) {
   server.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
-      // "x-access-token, Origin, Content-Type, Accept"
       "x-access-token, Origin, Content-Type, Accept"
     );
     next();
@@ -48,5 +47,5 @@ module.exports = function (server) {
   
   // registering routes
   server.use('/auth', authRoute);
-  server.use('/api/items', [authJwt.verifyToken, authJwt.isRegular], itemRoute);
+  server.use('/api/items', [authJwt.verifyToken, authJwt.isAdmin], itemRoute);
 }

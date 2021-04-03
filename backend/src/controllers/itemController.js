@@ -8,11 +8,12 @@ module.exports = {
    * @param {*} req 
    * @param {*} res 
    */
-  index (req, res) {
-    Item.find()
+  index(req, res) {
+    const filter = { ...req.body.filter, user: req.userId };
+    console.log('filtro', filter)
+    Item.find(filter, "-__v")
     .then(result => {
       res.json({
-        idUser: req.userId,
         data: result
       });
     })
@@ -26,9 +27,19 @@ module.exports = {
    * @param {*} req 
    * @param {*} res 
    */
-  store (req, res) {
+  async store (req, res) {
+    const user = req.userId;
+    const {
+      image,
+      name,
+      description
+    } = req.body;
+    
     const item = new Item({
-      name: 'teste1'
+      user,
+      image,
+      name,
+      description
     });
 
     item

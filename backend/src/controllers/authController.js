@@ -11,7 +11,7 @@ module.exports = {
    * @param {*} req 
    * @param {*} res 
    */
-  login(req, res) {
+   login(req, res) {
     User.findOne({
       name: req.body.name
     })
@@ -23,7 +23,7 @@ module.exports = {
       }
 
       if (!user) {
-        return res.status(404).send({ error: "User Not found." });
+        return res.status(404).send({ error: "User not found." });
       }
 
       // var passwordIsValid = bcrypt.compareSync(
@@ -35,12 +35,12 @@ module.exports = {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          error: "Invalid Password!"
+          error: "Invalid credentials!"
         });
       }
 
       const token = jwt.sign({ id: user.id }, authConfig.secret, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: (60 * 60 * 24) // 24 hours
       });
 
       var authorities = [];

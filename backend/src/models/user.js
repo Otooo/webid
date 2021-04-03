@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+  roles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Role"
+  }],
   name: {
     type: String,
     require: true
@@ -10,10 +14,6 @@ const userSchema = new Schema({
     type: String,
     require: true
   },
-  roles: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Role"
-  }],
   created_at: {
     type: Date,
     default: Date.now
