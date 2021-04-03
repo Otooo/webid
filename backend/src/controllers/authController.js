@@ -11,7 +11,7 @@ module.exports = {
    * @param {*} req 
    * @param {*} res 
    */
-   login(req, res) {
+  login(req, res) {
     User.findOne({
       name: req.body.name
     })

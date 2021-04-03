@@ -9,12 +9,12 @@ module.exports = {
     let token = req.headers["x-access-token"];
   
     if (!token) {
-      return res.status(403).send({ message: "No token provided!" });
+      return res.status(403).send({ error: "No token provided!" });
     }
   
     jwt.verify(token, authConfig.secret, (err, decoded) => {
       if (err) {
-        return res.status(401).send({ message: "Unauthorized!" });
+        return res.status(401).send({ error: "Unauthorized!" });
       }
       req.userId = decoded.id;
       next();
@@ -24,7 +24,7 @@ module.exports = {
   isAdmin (req, res, next) {
     User.findById(req.userId).exec((err, user) => {
       if (err) {
-        res.status(500).send({ message: err });
+        res.status(500).send({ error: err });
         return;
       }
   
@@ -34,7 +34,7 @@ module.exports = {
         },
         (err, roles) => {
           if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send({ error: err });
             return;
           }
   
@@ -45,7 +45,7 @@ module.exports = {
             }
           }
   
-          res.status(403).send({ message: "Non-admin access denied!" });
+          res.status(403).send({ error: "Non-admin access denied!" });
           return;
         }
       );
@@ -55,7 +55,7 @@ module.exports = {
   isRegular (req, res, next) {
     User.findById(req.userId).exec((err, user) => {
       if (err) {
-        res.status(500).send({ message: err });
+        res.status(500).send({ error: err });
         return;
       }
   
@@ -65,7 +65,7 @@ module.exports = {
         },
         (err, roles) => {
           if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send({ error: err });
             return;
           }
   
@@ -76,7 +76,7 @@ module.exports = {
             }
           }
   
-          res.status(403).send({ message: "Access denied!" });
+          res.status(403).send({ error: "Access denied!" });
           return;
         }
       );

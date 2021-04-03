@@ -44,8 +44,12 @@ module.exports = function (server) {
   // loading routes
   const authRoute = require('../src/routes/authRoute');
   const itemRoute = require('../src/routes/itemRoute');
+  const auctionRoute = require('../src/routes/auctionRoute');
+  const bidbotRoute = require('../src/routes/bidbotRoute');
   
   // registering routes
   server.use('/auth', authRoute);
   server.use('/api/items', [authJwt.verifyToken, authJwt.isAdmin], itemRoute);
+  server.use('/api/auctions', [authJwt.verifyToken], auctionRoute);
+  server.use('/api/bidbots', [authJwt.verifyToken, authJwt.isRegular], bidbotRoute);
 }

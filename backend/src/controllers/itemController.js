@@ -10,7 +10,6 @@ module.exports = {
    */
   index(req, res) {
     const filter = { ...req.body.filter, user: req.userId };
-    console.log('filtro', filter)
     Item.find(filter, "-__v")
     .then(result => {
       res.json({

@@ -45,6 +45,7 @@ services:
       - data:/data/db
     env_file: *env
     environment:
+      # - "TZ=America/Bahia" 
       MONGO_INITDB_DATABASE: ${DB_DATABASE}
       # MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
       # MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}

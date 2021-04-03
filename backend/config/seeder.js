@@ -128,10 +128,9 @@ async function seedBidbots() {
   console.log('Seeding bidbots ...');
   let promises = []
 
-  const admin = await User.findOne({ name: 'admin' });
   const user1 = await User.findOne({ name: 'user1' });
   const user2 = await User.findOne({ name: 'user2' });
-  const users = [admin, user1, user2];
+  const users = [user1, user2];
 
   users.forEach(user => {
     promises.push(new Bidbot({

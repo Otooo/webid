@@ -21,9 +21,6 @@ const auctionSchema = new Schema({
     type: String,
     default: 'closed'
   },
-  opened_at: {
-    type: Date
-  },
   closed_at: {
     type: Date
   },
@@ -33,4 +30,4 @@ const auctionSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Auction', auctionSchema, 'auction');
+module.exports = mongoose.model('Auction', auctionSchema, 'auctions');
