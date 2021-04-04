@@ -15,10 +15,13 @@ module.exports = {
     const user = await User.findOne({ _id: req.userId })
     .populate("roles", "name")
     
-    let itemFilter = { ...req.body.filter };
+    const filterName = req.query.name;
+    const filterDescription = req.query.description;
     let auctionFilter = {};
     if (user.roles.find(role => 'regular' === role.name)) {
       auctionFilter = { status: "opened" };
+    } else {
+      // get only admin auctions
     }
     
     Auction.find(auctionFilter, "-__v")
@@ -29,14 +32,14 @@ module.exports = {
       if (error) {
         res.status(500).json({ error });
       }
-      
+
       const data = result.filter(auction => {
         let matchName = /.*/;
         let matchDescription = /.*/;
-        if (itemFilter.name)
-          matchName = ".*" + itemFilter.name + ".*";
-        if (itemFilter.description)
-          matchDescription = ".*" + itemFilter.description + ".*";
+        if (filterName)
+          matchName = ".*" + filterName + ".*";
+        if (filterDescription)
+          matchDescription = ".*" + filterDescription + ".*";
         
         const item = auction.item;
         return (undefined != item.name.match(matchName)) && (undefined != item.description.match(matchDescription));
@@ -44,6 +47,38 @@ module.exports = {
 
       res.json({
         data
+      });
+    })
+  },
+
+  /**
+   * 
+   * @param {*} req 
+   * @param {*} res 
+   */
+  async show(req, res) {
+    const id = req.params.id;
+    const user = await User.findOne({ _id: req.userId })
+    .populate("roles", "name")
+    
+    let auctionFilter = { _id:id };
+    if (user.roles.find(role => 'regular' === role.name)) {
+      auctionFilter = { ...auctionFilter, status: "opened" };
+    } else {
+      // get only admin auctions
+    }
+    
+    Auction.findOne(auctionFilter, "-__v")
+    .populate("payer", "name")
+    .populate("item", "name description")
+    .sort('current_bid')
+    .exec((error, result) => {
+      if (error) {
+        res.status(500).json({ error });
+      }
+
+      res.json({
+        data: result
       });
     })
   },
@@ -73,7 +108,7 @@ module.exports = {
     const auction = await Auction.findOne({ _id: id });
 
     let message = "Auction updated successfully!";
-    if (current_bid) {
+    if (current_bid || 0 === current_bid) {
       if (auction.current_bid >= current_bid) {
         res.status(500).send({ error: "Your bid is lower then allowed amount!" });
         return;

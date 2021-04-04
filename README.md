@@ -32,6 +32,17 @@ Follow the next steps ([using the makefile](#using-makefile) or [docker-compose]
   6. The api will be running on **[http://localhost:9000/api](http://localhost:9000/api)**.
 
 
+## Usage
+  1. After seeding, you can enter the [WeBid](http://localhost:8080) with these credentials:  
+    `name: `**admin**  
+    `password:` **admin**  
+    or  
+    `name:` **user1**  
+    `password:` **user1**  
+    or  
+    `name:` **user2**  
+    `password:` **user2**  
+
 ## Common commands list
 
   * List makefile commands. See [Makefile][MAKEFILE].  

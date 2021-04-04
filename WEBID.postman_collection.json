@@ -51,7 +51,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"admin\",\n    \"password\": \"admin\"\n}",
+					"raw": "{\n    \"name\": \"user1\",\n    \"password\": \"user1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -130,21 +130,6 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "value",
-							"value": "{{token}}",
-							"type": "string"
-						},
-						{
-							"key": "key",
-							"value": "x-access-token",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -163,12 +148,23 @@
 					}
 				},
 				"url": {
-					"raw": "{{api}}/items",
+					"raw": "{{api}}/items?name=Lego",
 					"host": [
 						"{{api}}"
 					],
 					"path": [
 						"items"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Lego"
+						},
+						{
+							"key": "description",
+							"value": "",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -267,12 +263,70 @@
 					}
 				},
 				"url": {
-					"raw": "{{api}}/auctions",
+					"raw": "{{api}}/auctions?name=Lego",
 					"host": [
 						"{{api}}"
 					],
 					"path": [
 						"auctions"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Lego"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AUCTION",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/auctions?name=Lego",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"auctions"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Lego"
+						}
 					]
 				}
 			},
@@ -525,7 +579,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"auctionId\": \"6067d770022b5a09b9138f6a\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -533,12 +587,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{api}}/botsubscribes",
+					"raw": "{{api}}/botsubscribes?auctionId=6067d770022b5a09b9138f6a",
 					"host": [
 						"{{api}}"
 					],
 					"path": [
 						"botsubscribes"
+					],
+					"query": [
+						{
+							"key": "auctionId",
+							"value": "6067d770022b5a09b9138f6a"
+						}
 					]
 				}
 			},

@@ -1,0 +1,31 @@
+version: '3.7'
+
+#Extensões
+x-env: &env
+  - ./.env
+
+networks:
+  api_webid_network:
+    external: true #(true) If already exists the network
+    name: api_webid_network
+
+services:
+  front_bid:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: front_bid
+    restart: always
+    volumes:
+      # Project
+      - ./:/webid-front
+      - /webid-front/node_modules
+    tty: True
+    env_file: *env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 8080:8080
+    networks:
+     - api_webid_network

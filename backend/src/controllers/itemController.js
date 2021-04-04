@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Auction = require('../models/auction');
 const Item = require('../models/item');
 
 module.exports = {
@@ -9,9 +10,31 @@ module.exports = {
    * @param {*} res 
    */
   index(req, res) {
-    const filter = { ...req.body.filter, user: req.userId };
-    Item.find(filter, "-__v")
+    const name = req.query.name || '';
+    const description = req.query.description || '';
+    
+    Item.aggregate([
+      {
+        $match: {
+          "name": new RegExp(`.*${name}.*`),
+          "description": new RegExp(`.*${description}.*`)
+        }
+      },
+      {
+        $lookup: {
+          from: "auctions", 
+          localField: '_id',
+          foreignField: 'item',
+          as: 'auction'
+        }
+      }
+    ])
     .then(result => {
+      result.map(item => {
+        item.auction = item.auction[0];
+        return item;
+      });
+        
       res.json({
         data: result
       });

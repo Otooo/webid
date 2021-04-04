@@ -14,7 +14,7 @@ module.exports = {
    */
   async show(req, res) {
     const user = req.userId;
-    const auction = req.body.auctionId;
+    const auction = req.query.auctionId;
     const bot = await Bidbot.findOne({ user }, "-__v");
 
     BotSubscribe.findOne({ auction, bidbot: bot._id }, "-__v")
