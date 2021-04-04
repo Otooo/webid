@@ -79,7 +79,10 @@ export default {
       .then(this.profile)
       .then(() => {
         this.$helpers.notifyVueSuccess.bind(this)('Welcome to Webid');
-        this.$router.push({ name: 'auctions'});
+        setTimeout(() => {
+          this.$router.push({ name: 'auctions'});
+          this.loading_login = true;
+        }, 500); 
       })
       .catch((error) => {
         try {
