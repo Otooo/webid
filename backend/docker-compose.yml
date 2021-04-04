@@ -20,15 +20,15 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: api_webid
-    restart: unless-stopped
+    restart: always
     volumes:
       # Project
       - ./:/webid-api
-      # - /webid-api/node_modules
+      - /webid-api/node_modules
     # working_dir: /webid-api
     env_file: *env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
     ports:
       - 9000:${PORT}
     networks:

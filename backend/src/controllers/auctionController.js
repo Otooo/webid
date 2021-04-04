@@ -15,24 +15,37 @@ module.exports = {
     const user = await User.findOne({ _id: req.userId })
     .populate("roles", "name")
     
-    // Fix retrieve, when admin, only own auctions
-    // Fix filters to retrieve item name and description and sort by price
-    let filter = { ...req.body.filter };
-    // , user: req.userId
+    let itemFilter = { ...req.body.filter };
+    let auctionFilter = {};
     if (user.roles.find(role => 'regular' === role.name)) {
-      filter = { ...filter, status: "opened" };
+      auctionFilter = { status: "opened" };
     }
     
-    Auction.find(filter, "-__v")
+    Auction.find(auctionFilter, "-__v")
+    .populate("payer", "name")
+    .populate("item", "name description")
     .sort('current_bid')
-    .then(result => {
+    .exec((error, result) => {
+      if (error) {
+        res.status(500).json({ error });
+      }
+      
+      const data = result.filter(auction => {
+        let matchName = /.*/;
+        let matchDescription = /.*/;
+        if (itemFilter.name)
+          matchName = ".*" + itemFilter.name + ".*";
+        if (itemFilter.description)
+          matchDescription = ".*" + itemFilter.description + ".*";
+        
+        const item = auction.item;
+        return (undefined != item.name.match(matchName)) && (undefined != item.description.match(matchDescription));
+      });
+
       res.json({
-        data: result
+        data
       });
     })
-    .catch(error => {
-      res.status(500).json({ error });
-    });
   },
 
   /**

@@ -27,7 +27,7 @@ upback:
 
 # target: upfront - Up frontend container
 upfront:
-	$(COMPOSE) $(COMPOSE_FRONT) up
+	$(COMPOSE) $(COMPOSE_FRONT) up -d
 	@echo "$@ finished :O"
 
 # target: down - Down all containers

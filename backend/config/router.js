@@ -5,15 +5,17 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const authJwt = require("../src/middlewares/authMiddleware");
 
-// const cors = require("cors");
+const cors = require("cors");
 const router = express.Router();
 
 module.exports = function (server) {
   // configure cors
-  // const corsOptions = {
-  //   origin: "http://localhost:8080"
-  // };
-  // server.use(cors(corsOptions));
+  const corsOptions = {
+    // origin: process.env.FRON_URL
+    exposedHeaders: ['accessToken', 'expiresIn'],
+  };
+  server.use(cors(corsOptions));
+  server.options('*', cors(corsOptions));
   
   // configure parsers
   server.use(bodyParser.json());
@@ -38,11 +40,16 @@ module.exports = function (server) {
       "Access-Control-Allow-Headers",
       "x-access-token, Origin, Content-Type, Accept"
     );
+    res.header(
+      "Access-Control-Expose-Headers",
+      "accessToken, expiresIn"
+    );
     next();
   });
 
   // loading routes
   const authRoute = require('../src/routes/authRoute');
+  const profileRoute = require('../src/routes/profileRoute');
   const itemRoute = require('../src/routes/itemRoute');
   const auctionRoute = require('../src/routes/auctionRoute');
   const bidbotRoute = require('../src/routes/bidbotRoute');
@@ -50,6 +57,7 @@ module.exports = function (server) {
   
   // registering routes
   server.use('/auth', authRoute);
+  server.use('/api/profile', [authJwt.verifyToken], profileRoute);
   server.use('/api/items', [authJwt.verifyToken, authJwt.isAdmin], itemRoute);
   server.use('/api/auctions', [authJwt.verifyToken], auctionRoute);
   server.use('/api/bidbots', [authJwt.verifyToken, authJwt.isRegular], bidbotRoute);

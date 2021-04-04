@@ -39,8 +39,9 @@ module.exports = {
         });
       }
 
+      const expiresIn = (60 * 60 * 24) // 24 hours;
       const token = jwt.sign({ id: user.id }, authConfig.secret, {
-        expiresIn: (60 * 60 * 24) // 24 hours
+        expiresIn
       });
 
       var authorities = [];
@@ -49,6 +50,7 @@ module.exports = {
       }
 
       res.set('accessToken', token);
+      res.set('expiresIn', expiresIn);
       res.status(200).send({
         id: user._id,
         name: user.name,
