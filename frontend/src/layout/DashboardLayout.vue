@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <sidebar-link v-if="isRegular" :to="{name: 'service-types'}">
+      <sidebar-link v-if="isRegular" :to="{name: 'bidbot'}">
         <i class="fa fa-android" aria-hidden="true"/>
         <p>Bid Bot</p>
       </sidebar-link>

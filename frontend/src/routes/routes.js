@@ -7,6 +7,8 @@ import Login from '@/pages/LoginPage.vue';
 
 // Pages DASHBOARD
 import DashboardLayout from '@/layout/DashboardLayout.vue';
+
+// Pages Auctions
 import AuctionList from '@/pages/Auction/AuctionList.vue';
 import AuctionCreate from '@/pages/Auction/AuctionCreate.vue';
 import AuctionEdit from '@/pages/Auction/AuctionEdit.vue';
@@ -17,19 +19,9 @@ import ProductList from '@/pages/Product/ProductList.vue';
 import ProductCreate from '@/pages/Product/ProductCreate.vue';
 import ProductGeneral from '@/pages/Product/ProductGeneral.vue';
 
-// Pages RIDE
-import RideList from '@/pages/Ride/RideList.vue';
-
-// Pages TYPE SERVICE
-import ServiceTypeList from '@/pages/ServiceType/ServiceTypeList.vue';
-import ServiceTypeEdit from '@/pages/ServiceType/ServiceTypeEdit.vue';
-import ServiceTypeGeneral from '@/pages/ServiceType/ServiceTypeGeneral.vue';
-
-// Pages ACCUMULATED
-import AccumulatedList from '@/pages/Balance/AccumulatedList.vue';
-
-// Pages PROVIDERS
-import MotorcyclistList from '@/pages/Motorcyclist/MotorcyclistList.vue';
+// Pages BIDBOT
+import BidbotEdit from '@/pages/Bidbot/BidbotEdit.vue';
+import BidbotGeneral from '@/pages/Bidbot/BidbotGeneral.vue';
 
 // EXAMPLE PAGES
 import TableList from '@/pages/TableList.vue';
@@ -103,48 +95,21 @@ const routes = [
       },
 
       
-      // rides
+      // bidbot
       {
-        path: 'rides',
-        name: 'rides',
-        component: RideList,
-        beforeEnter: auth,
-      },
-      // type services
-      {
-        path: 'service-types',
-        name: 'service-types',
-        component: ServiceTypeList,
-        beforeEnter: auth,
-      },
-      {
-        path: 'service-type/', // :id
-        name: 'service-type',
-        redirect: { name: 'service-type-general' },
-        component: ServiceTypeEdit,
+        path: 'bidbot/',
+        name: 'bidbot',
+        redirect: { name: 'bidbot-general' },
+        component: BidbotEdit,
         props: true,
         children: [
           {
             path: 'general/',
-            name: 'service-type-general',
-            component: ServiceTypeGeneral,
+            name: 'bidbot-general',
+            component: BidbotGeneral,
             beforeEnter: auth,
           }
         ]
-      },
-      // accumulated
-      {
-        path: 'accumulated',
-        name: 'accumulated',
-        component: AccumulatedList,
-        beforeEnter: auth,
-      },
-      // providers 
-      {
-        path: 'providers',
-        name: 'providers',
-        component: MotorcyclistList,
-        beforeEnter: auth,
       }
     ]
   },

@@ -54,7 +54,7 @@ export default {
   props: {
     title: {
       type: String,
-      // default: 'Programa de Parceiros'
+      // default: 'Webid'
       default: ''
     },
     backgroundColor: {

@@ -5,7 +5,7 @@
         <div class="col-12">
           <card>
             <template slot="header">
-              <h4 class="card-title">Detalhar Serviço</h4>
+              <h4 class="card-title">Bid Bot Details</h4>
             </template>
 
             <div class="card">
@@ -13,8 +13,8 @@
                 <ul class="nav nav-tabs">
                   <li class="nav-item">
                     <router-link 
-                      :to="{name: 'service-type-general'}" 
-                      class="nav-link">Dados Gerais</router-link>
+                      :to="{name: 'bidbot-general'}" 
+                      class="nav-link">Bot</router-link>
                   </li>
                 </ul>
               </div>
@@ -22,7 +22,7 @@
                 <router-view/>
               </div>
             </div>
-                        
+
           </card>
         </div>
       </div>
