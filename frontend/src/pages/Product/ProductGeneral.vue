@@ -73,11 +73,13 @@ export default {
       }
     };
   },
+  
   mounted() {
-    const existingItem = JSON.parse(this.$route.params.item);
-    if (existingItem)
-      this.item
+    // const existingItem = JSON.parse(this.$route.params.item);
+    // if (existingItem)
+    //   this.item = existingItem;
   },
+
   methods: {
     create() {
       this.loading_save = true;

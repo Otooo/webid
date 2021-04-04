@@ -19,7 +19,7 @@ const auctionSchema = new Schema({
   },
   status: {
     type: String,
-    default: 'closed'
+    default: 'opened'
   },
   closed_at: {
     type: Date

@@ -98,7 +98,6 @@ export default {
   data() {
     return {
       loading_save: false,
-      isSee: false,
       money: {
         decimal: ".",
         thousands: ",",
@@ -121,12 +120,7 @@ export default {
   
   mounted() {
     if (! this.$route.params.item)
-    this.$router.push('/products');
-    
-    if (! this.$route.params.auction) {
-      this.isSee = true;
-      this.auction = JSON.parse(this.$route.params.auction);
-    } 
+      this.$router.push('/products');
     
     this.auction.item = JSON.parse(this.$route.params.item);
   },
@@ -144,10 +138,10 @@ export default {
 
       auctionAPI
         .store(datapost)
-        .then(() => {
+        .then((response) => {
           this.$helpers.notifyVueSuccess.bind(this)('Auction successfully created!');
           
-          // this.$router.push('/products'); // Go to edit auction
+          this.$router.push({name: 'auction-edit', query: { id: response._id }}); // Go to edit auction
         })
         .catch(this.$helpers.notifyVueError.bind(this))
         .finally(() => (this.loading_save = false));

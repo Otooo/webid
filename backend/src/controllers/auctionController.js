@@ -42,7 +42,7 @@ module.exports = {
           matchDescription = ".*" + filterDescription + ".*";
         
         const item = auction.item;
-        return (undefined != item.name.match(matchName)) && (undefined != item.description.match(matchDescription));
+        return item && (undefined != item.name.match(matchName)) && (undefined != item.description.match(matchDescription));
       });
 
       res.json({
