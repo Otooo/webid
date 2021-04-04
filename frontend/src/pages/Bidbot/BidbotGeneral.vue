@@ -4,15 +4,11 @@
     
     <form v-if="loaded" @submit.prevent="save">
 
-      <div class="row">
+      <div class="row" :class="{disabled:isDisabled, enabled:!isDisabled}">
         <div class="col-md">
-          <base-input
-            type="text"
-            label=""
-            :value="status"
-            :class="[text-center, {'disabled':isDisabled, 'enabled':!isDisabled}]"
-            :disabled="true"
-          ></base-input>
+          <h2>
+            {{ status }}
+          </h2>
         </div>
       </div>
       
@@ -21,15 +17,6 @@
 
       <!-- STATUS CURRENT / MAX BID -->
       <div class="row">
-        <!-- START_BID -->
-        <!-- <div class="col-md-4 form-group">
-          <radio
-            type="text"
-            label="Status"
-            v-model="bidbot.active"
-          ></radio>
-        </div> -->
-
         <!-- MAX -->
         <div class="col-md-4 form-group">
           <label>Max bid</label>
@@ -37,7 +24,7 @@
             class="form-control border-input"
             placeholder="Max bid"
             v-bind="money"
-            :value="bidbot.max_bid"
+            v-model="bidbot.max_bid"
             required
           ></money>
         </div>
@@ -49,10 +36,16 @@
             class="form-control border-input"
             placeholder="Initial bid"
             v-bind="money"
-            v-model="bidbot.current_bid"
-            required
+            :value="bidbot.current_bid"
+            :disabled="true"
           ></money>
         </div>
+        
+        <!-- ACTIVATE -->
+        <div class="col-md-4 align-center">
+          <base-checkbox v-model="bidbot.active">Enabled</base-checkbox>
+        </div>
+
       </div>
 
       <!-- EDIT BUTTON -->
@@ -102,40 +95,50 @@ export default {
   },
   
   created() {
-    
+    this.loadResources();
   },
 
   methods: {
+    loadResources() {
+      this.loaded = false;
+
+      bidbotAPI.show()
+      .then(this.setBidbotnData)
+      .catch(this.$helpers.notifyVueError.bind(this))
+      .finally(() => this.loaded = true);
+    },
+
+    setBidbotnData(response) {
+      this.bidbot = response;
+      
+      return this.bidbot;
+    },
+
     save() {
       this.loading_save = true;
 
       bidbotAPI
-        .store(this.bidbot)
-        .then((response) =>{
-          this.$helpers.notifyVueSuccess.bind(this)('Product successfully created!');
-          this.$router.push('/products'); 
+        .update(this.bidbot)
+        .then((response) => {
+          this.$helpers.notifyVueSuccess.bind(this)(response.message);
         })
         .catch(this.$helpers.notifyVueError.bind(this))
         .finally(() => (this.loading_save = false));
-    },
-
-    update() {
-      this.$helpers.notifyVueWarning.bind(this)('Not yet...')
     }
   },
 
   computed: {
     isDisabled() {
-      return false === this.bidbot.active;
+      return !this.bidbot.active;
     },
     current_bid() {
-      return this.bidbot.current_bid;
+      return this.$helpers.formatPriceUSD(this.bidbot.current_bid || 0);
     },
     max_bid() {
-      return this.bidbot.max_bid;
+      return this.$helpers.formatPriceUSD(this.bidbot.max_bid || 0);
     },
     status() {
-      return (this.isDisabled? 'Enabled':'Activated') + '   ' + this.current_bid + '/' + this.max_bid;
+      return (this.isDisabled? 'Disabled':'Enabled') + '   ' + this.current_bid + ' / ' + this.max_bid;
     }
   },
 };
@@ -150,12 +153,12 @@ export default {
     pointer-events: none;
   }
 
-  .enabled {
+  .enabled * {
     color: darkgreen;
-    text-align: center;
+    text-align: center !important;
   }
-  .disabled {
+  .disabled * {
     color: darkred;
-    text-align: center;
+    text-align: center !important;
   }
 </style>

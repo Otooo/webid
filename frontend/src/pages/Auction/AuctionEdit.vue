@@ -233,7 +233,7 @@ export default {
 
     setAuctionData(response) {
       this.auction = response;
-      console.log('aucitons:', this.auction)
+      
       return this.auction;
     },
 

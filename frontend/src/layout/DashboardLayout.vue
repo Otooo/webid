@@ -116,9 +116,11 @@ export default {
     '$route': function (value) {
       var elDiv = document.getElementById('dashboard-products');
       if (value.path.includes('products')) {
-        elDiv.classList.add('active');
+        if (elDiv && elDiv.classList)
+          elDiv.classList.add('active');
       } else {
-        elDiv.classList.remove('active');
+        if (elDiv && elDiv.classList)
+          elDiv.classList.remove('active');
       }
     }
   },
