@@ -33,18 +33,7 @@ module.exports = {
   async edit(req, res) {
     const user = req.userId;
     const bot = await Bidbot.findOne({ user }, "-__v")
-    
-    // const {
-    //   active,
-    //   max_bid,
-    //   current_bid
-    // } = req.body;
-
-    // bot.active = (true === active || false === active)? active : bot.active;
-    // bot.max_bid = (max_bid || 0 === max_bid)? max_bid : bot.max_bid;
-    // bot.current_bid = (current_bid || 0 === current_bid)? current_bid : bot.current_bid;
-
-    // bot.save()
+  
     BidbotService.update(bot, req.body)
     .then(async (result) => {
       let message = "Bot successfully updated!";

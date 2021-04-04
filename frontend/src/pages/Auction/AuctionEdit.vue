@@ -170,6 +170,7 @@ import Vue from "vue";
 import { Money } from "v-money";
 Vue.use(Money);
 import auctionAPI from "@/api/auction.js";
+import bidbotAPI from "@/api/bidbot.js";
 
 export default {
   components: {
@@ -276,6 +277,14 @@ export default {
 
     activateBot() {
       this.loading_bot = true;
+
+      bidbotAPI
+        .update({ active: true })
+        .then((response) => {
+          this.$helpers.notifyVueSuccess.bind(this)(response.message);
+        })
+        .catch(this.$helpers.notifyVueError.bind(this))
+        .finally(() => (this.loading_bot = false));
     },
   },
 
