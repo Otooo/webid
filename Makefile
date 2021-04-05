@@ -38,4 +38,4 @@ down:
 
 # target: seed - Execute seeder in mongodb
 seed:
-	$(COMPOSE) $(COMPOSE_BACK) exec api_webid npm run seed
+	$(COMPOSE) $(COMPOSE_BACK) exec -T api_webid npm run seed

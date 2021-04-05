@@ -27,7 +27,7 @@ Follow the next steps ([using the makefile](#using-makefile) or [docker-compose]
   2. Type `cd backend && cp .env-example .env ; cd ..` in project root.
   3. Type `cd frontend && cp .env-example .env ; cd ..` in project root.
   4. Type ``docker-compose -f ./backend/docker-compose.yml up -d; docker-compose -f ./frontend/docker-compose.yml up -d`` in project root. It will build the containers and will run the containers in _daemon_ mode.
-  5. Type `docker-compose -f ./backend/docker-compose.yml exec api_webid npm run seed` in project root. It will configure the initials data in mongodb.
+  5. Type `docker-compose -f ./backend/docker-compose.yml exec -T api_webid npm run seed` in project root. It will configure the initials data in mongodb.
   6. The application will be running on **[http://localhost:8080](http://localhost:8080)**.
   7. The api will be running on **[http://localhost:9000/api](http://localhost:9000/api)**.
 
